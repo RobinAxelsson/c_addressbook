@@ -11,34 +11,19 @@ typedef struct {
     int size;
 } DynAddressBook;
 
-DynAddressBook dynAddressBook_init(){
-    DynAddressBook dynAddressBook = { NULL, 0};
-    printf("This is your dynamic address book:\n");
-    return dynAddressBook;
-}
 
-DynAddressBook DynAddContactPtr(DynAddressBook *book, Contact contact){
-    printf("book.contacts %p\n", (*book).contacts);
-    (*book).size++;
-    Contact* ptr = (Contact*)malloc(sizeof(Contact)*(*book).size);
-    printf("book.contacts %p\n", (*book).contacts);
-    printf("malloc.ptr %p\n", ptr);
-    (*book).contacts = ptr;
-    printf("book.contacts %p\n", (*book).contacts);
-    (*book).contacts[0] = contact;
-    printf("name %s, number %s\n", (*book).contacts[0].name, (*book).contacts[0].number);
-}
+DynAddressBook DynAddContact(DynAddressBook* book, Contact contact){
 
-DynAddressBook DynAddContact(DynAddressBook book, Contact contact){
-    printf("book.contacts %p\n", (book).contacts);
-    (book).size++;
-    Contact *ptr = (Contact*)malloc(sizeof(Contact)*(book).size);
-    printf("book.contacts %p\n", (book).contacts);
-    printf("malloc.ptr %p\n", ptr);
-    (book).contacts = ptr;
-    printf("book.contacts %p\n", (book).contacts);
-    (book).contacts[0] = contact;
-    printf("name %s, number %s, ptr: %p\n", (book).contacts[0].name, (book).contacts[0].number, &(book).contacts[0]);
+    book->size++;
+    Contact *ptr = realloc(book->contacts, sizeof(Contact) * book->size);
+
+    printf("malloc.ptr %p\n", (void*)ptr);
+
+    book->contacts = ptr;
+
+    printf("book.contacts %p\n", (void*)book->contacts);
+
+    book->contacts[book->size - 1] = contact;
 }
 
 int main(){
@@ -46,21 +31,16 @@ int main(){
     book.contacts = NULL;
     printf("book.contacts %p\n", (void*)book.contacts);
 
-    book.size++;
-    Contact *ptr = malloc(sizeof(Contact) * book.size);
-
-    printf("malloc.ptr %p\n", (void*)ptr);
-
-    book.contacts = ptr;
-
-    printf("book.contacts %p\n", (void*)book.contacts);
-
     Contact contact = {"Robin", "0723079232"};
-    book.contacts[0] = contact;
+    DynAddContact(&book, contact);
+    Contact contact2 = {"Shan", "0723079333"};
+    DynAddContact(&book, contact2);
 
-    printf("name %s, number %s, ptr: %p\n", book.contacts[0].name, book.contacts[0].number, (void*)&book.contacts[0]);
+    for (int i = 0; i < book.size; ++i) {
+        printf("name %s, number %s, ptr: %p\n", book.contacts[i].name, book.contacts[i].number, (void*)&book.contacts[i]);
+    }
 
-    free(ptr);
+    free(book.contacts);
 }
 
 //int main(){
