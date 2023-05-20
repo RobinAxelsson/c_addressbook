@@ -1,15 +1,10 @@
 #include <stdio.h>
+#include <malloc.h>
 
 typedef struct {
     char name[20];
     char number[11];
 } Contact;
-
-const Contact NULL_CONTACT = { '\0', '\0' };
-
-typedef struct {
-    Contact contacts[3];
-} AddressBook;
 
 typedef struct {
     Contact *contacts;
@@ -18,99 +13,92 @@ typedef struct {
 
 DynAddressBook dynAddressBook_init(){
     DynAddressBook dynAddressBook = { NULL, 0};
-    printf("Dyn book init");
+    printf("This is your dynamic address book:\n");
     return dynAddressBook;
 }
 
-int contact_is_null(Contact contact){
-    return contact.name[0] == NULL_CONTACT.name[0] && contact.number[0] == NULL_CONTACT.number[0];
+DynAddressBook DynAddContactPtr(DynAddressBook *book, Contact contact){
+    printf("book.contacts %p\n", (*book).contacts);
+    (*book).size++;
+    Contact* ptr = (Contact*)malloc(sizeof(Contact)*(*book).size);
+    printf("book.contacts %p\n", (*book).contacts);
+    printf("malloc.ptr %p\n", ptr);
+    (*book).contacts = ptr;
+    printf("book.contacts %p\n", (*book).contacts);
+    (*book).contacts[0] = contact;
+    printf("name %s, number %s\n", (*book).contacts[0].name, (*book).contacts[0].number);
 }
 
-
-void AddContactWithPtr(AddressBook *book, Contact contact){
-    
-    int length = sizeof((*book).contacts)/sizeof(Contact);
-    for (int i = 0; i < length; ++i) {
-        if(contact_is_null((*book).contacts[i])){
-            (*book).contacts[i] = contact;
-            printf("Added %s\n", contact.name);
-            return;
-        }
-    }
-    printf("%s could not be added, book is full!\n", contact.name);
+DynAddressBook DynAddContact(DynAddressBook book, Contact contact){
+    printf("book.contacts %p\n", (book).contacts);
+    (book).size++;
+    Contact *ptr = (Contact*)malloc(sizeof(Contact)*(book).size);
+    printf("book.contacts %p\n", (book).contacts);
+    printf("malloc.ptr %p\n", ptr);
+    (book).contacts = ptr;
+    printf("book.contacts %p\n", (book).contacts);
+    (book).contacts[0] = contact;
+    printf("name %s, number %s, ptr: %p\n", (book).contacts[0].name, (book).contacts[0].number, &(book).contacts[0]);
 }
 
-//DynAddressBook DynAddContact(DynAddressBook book, Contact contact){
-//
-//    for (int i = 0; i < book.size; ++i) {
-//        if(contact_is_null(book.contacts[i])){
-//            book.contacts[i] = contact;
-//            printf("Added %s\n", contact.name);
-//            return book;
-//        }
-//    }
-//    printf("Allocating more memory for %s!\n", contact.name);
-//    Contact* ptr = (Contact*)malloc(sizeof(Point));
-//    if (ptr == NULL) {
-//        printf("Memory allocation failed.\n");
-//        return 1;
-//    }
-//
-//}
+int main(){
+    DynAddressBook book;
+    book.contacts = NULL;
+    printf("book.contacts %p\n", (void*)book.contacts);
 
-AddressBook AddContact(AddressBook book, Contact contact){
+    book.size++;
+    Contact *ptr = malloc(sizeof(Contact) * book.size);
 
-    int length = sizeof(book.contacts)/sizeof(Contact);
-    for (int i = 0; i < length; ++i) {
-        if(contact_is_null(book.contacts[i])){
-            book.contacts[i] = contact;
-            printf("Added %s\n", contact.name);
-            return book;
-        }
-    }
-    printf("%s could not be added, book is full!\n", contact.name);
-}
+    printf("malloc.ptr %p\n", (void*)ptr);
 
-void print_all_contacts(AddressBook book){
-    int length = sizeof(book.contacts)/sizeof(Contact);
-    printf("Address book contacts:\n");
-    for (int i = 0; i < length; ++i) {
-        Contact contact = book.contacts[i];
-        printf("name: %s\nnumber: %s\n", contact.name, contact.number);
-    }
-}
+    book.contacts = ptr;
 
-AddressBook init_book() {
-    AddressBook book;
-    int length = sizeof(book.contacts)/sizeof(Contact);
-    for (int i = 0; i < length; ++i) {
-        book.contacts[i] = NULL_CONTACT;
-    }
-    return book;
-}
-
-int main() {
-    printf("This is your address book:\n");
-
-    AddressBook addressBook = init_book();
-
-    printf("address book pointer: %p\n", &addressBook);
+    printf("book.contacts %p\n", (void*)book.contacts);
 
     Contact contact = {"Robin", "0723079232"};
-    addressBook = AddContact(addressBook, contact);
+    book.contacts[0] = contact;
 
-    Contact contact2 = {"Shan", "0723079333"};
-    addressBook = AddContact(addressBook, contact2);
+    printf("name %s, number %s, ptr: %p\n", book.contacts[0].name, book.contacts[0].number, (void*)&book.contacts[0]);
 
-    Contact contact3 = {"Ahmed", "0723079888"};
-    addressBook = AddContact(addressBook, contact3);
-
-    Contact contact4 = {"Billy", "0723079111"};
-    addressBook = AddContact(addressBook, contact4);
-
-    printf("address book pointer: %p\n", &addressBook);
-
-    print_all_contacts(addressBook);
-
-    return 0;
+    free(ptr);
 }
+
+//int main(){
+//    DynAddressBook addressBook = dynAddressBook_init();
+//    Contact contact = {"Robin", "0723079232"};
+//    addressBook = DynAddContactPtr(&addressBook, contact);
+//    //addressBook = DynAddContact(addressBook, contact);
+//
+////    Contact contact2 = {"Shan", "0723079333"};
+////    addressBook = DynAddContact(addressBook, contact2);
+////
+//    printf("%p\n", &addressBook.contacts[0]);
+//    Contact contact2 = addressBook.contacts[0];
+//    printf("name: %s\nnumber: %s\n", contact2.name, contact2.number);
+//}
+
+//int main() {
+//    printf("This is your address book:\n");
+//
+//    AddressBook addressBook = init_book();
+//
+//    printf("address book pointer: %p\n", &addressBook);
+//
+//    Contact contact = {"Robin", "0723079232"};
+//    addressBook = AddContact(addressBook, contact);
+//
+//    Contact contact2 = {"Shan", "0723079333"};
+//    addressBook = AddContact(addressBook, contact2);
+//
+//    Contact contact3 = {"Ahmed", "0723079888"};
+//    addressBook = AddContact(addressBook, contact3);
+//
+//    Contact contact4 = {"Billy", "0723079111"};
+//    addressBook = AddContact(addressBook, contact4);
+//
+//    printf("address book pointer: %p\n", &addressBook);
+//
+//    print_all_contacts(addressBook);
+//
+//    return 0;
+//}
