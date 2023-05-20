@@ -4,4 +4,4 @@ project(c_addressbook C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(c_addressbook
-        main.c)
+        main.c addressbook.h addressbook.c)
