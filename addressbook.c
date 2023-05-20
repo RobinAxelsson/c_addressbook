@@ -3,6 +3,16 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef struct {
+    char name[20];
+    char number[11];
+} Contact;
+
+struct AddressBook{
+    Contact *contacts;
+    int size;
+};
+
 AddressBook* AddressBook_init(){
     AddressBook *self = malloc(sizeof(AddressBook));
     self->contacts = NULL;
@@ -10,7 +20,7 @@ AddressBook* AddressBook_init(){
     return self;
 }
 
-AddressBook AddContact(AddressBook* self, char *name, char *number){
+void AddContact(AddressBook* self, char *name, char *number){
     Contact contact;
     strcpy(contact.name, name);
     strcpy(contact.number, number);

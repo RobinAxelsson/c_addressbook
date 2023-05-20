@@ -5,20 +5,11 @@
 #ifndef C_ADDRESSBOOK_ADDRESSBOOK_H
 #define C_ADDRESSBOOK_ADDRESSBOOK_H
 
-typedef struct {
-    char name[20];
-    char number[11];
-} Contact;
-
-typedef struct {
-    Contact *contacts;
-    int size;
-} AddressBook;
+typedef struct AddressBook AddressBook;
 
 AddressBook* AddressBook_init();
 
-//AddressBook AddContact(AddressBook* self, Contact contact);
-AddressBook AddContact(AddressBook* self, char *name, char *number);
+void AddContact(AddressBook* self, char *name, char *number);
 
 void AddressBook_print(AddressBook* self);
 
