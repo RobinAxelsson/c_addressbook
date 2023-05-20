@@ -1,23 +1,35 @@
 #include <stdio.h>
 
-struct Contact {
+typedef struct {
     char name[20];
     char number[11];
-};
+} Contact;
 
-const struct Contact NULL_CONTACT = { '\0', '\0' };
+const Contact NULL_CONTACT = { '\0', '\0' };
 
-struct AddressBook {
-    struct Contact contacts[3];
-};
+typedef struct {
+    Contact contacts[3];
+} AddressBook;
 
-int contact_is_null(struct Contact contact){
+typedef struct {
+    Contact *contacts;
+    int size;
+} DynAddressBook;
+
+DynAddressBook dynAddressBook_init(){
+    DynAddressBook dynAddressBook = { NULL, 0};
+    printf("Dyn book init");
+    return dynAddressBook;
+}
+
+int contact_is_null(Contact contact){
     return contact.name[0] == NULL_CONTACT.name[0] && contact.number[0] == NULL_CONTACT.number[0];
 }
 
-void AddContactWithPtr(struct AddressBook *book, struct Contact contact){
+
+void AddContactWithPtr(AddressBook *book, Contact contact){
     
-    int length = sizeof((*book).contacts)/sizeof(struct Contact);
+    int length = sizeof((*book).contacts)/sizeof(Contact);
     for (int i = 0; i < length; ++i) {
         if(contact_is_null((*book).contacts[i])){
             (*book).contacts[i] = contact;
@@ -28,9 +40,27 @@ void AddContactWithPtr(struct AddressBook *book, struct Contact contact){
     printf("%s could not be added, book is full!\n", contact.name);
 }
 
-struct AddressBook AddContact(struct AddressBook book, struct Contact contact){
+//DynAddressBook DynAddContact(DynAddressBook book, Contact contact){
+//
+//    for (int i = 0; i < book.size; ++i) {
+//        if(contact_is_null(book.contacts[i])){
+//            book.contacts[i] = contact;
+//            printf("Added %s\n", contact.name);
+//            return book;
+//        }
+//    }
+//    printf("Allocating more memory for %s!\n", contact.name);
+//    Contact* ptr = (Contact*)malloc(sizeof(Point));
+//    if (ptr == NULL) {
+//        printf("Memory allocation failed.\n");
+//        return 1;
+//    }
+//
+//}
 
-    int length = sizeof(book.contacts)/sizeof(struct Contact);
+AddressBook AddContact(AddressBook book, Contact contact){
+
+    int length = sizeof(book.contacts)/sizeof(Contact);
     for (int i = 0; i < length; ++i) {
         if(contact_is_null(book.contacts[i])){
             book.contacts[i] = contact;
@@ -41,18 +71,18 @@ struct AddressBook AddContact(struct AddressBook book, struct Contact contact){
     printf("%s could not be added, book is full!\n", contact.name);
 }
 
-void print_all_contacts(struct AddressBook book){
-    int length = sizeof(book.contacts)/sizeof(struct Contact);
+void print_all_contacts(AddressBook book){
+    int length = sizeof(book.contacts)/sizeof(Contact);
     printf("Address book contacts:\n");
     for (int i = 0; i < length; ++i) {
-        struct Contact contact = book.contacts[i];
+        Contact contact = book.contacts[i];
         printf("name: %s\nnumber: %s\n", contact.name, contact.number);
     }
 }
 
-struct AddressBook init_book() {
-    struct AddressBook book;
-    int length = sizeof(book.contacts)/sizeof(struct Contact);
+AddressBook init_book() {
+    AddressBook book;
+    int length = sizeof(book.contacts)/sizeof(Contact);
     for (int i = 0; i < length; ++i) {
         book.contacts[i] = NULL_CONTACT;
     }
@@ -62,20 +92,20 @@ struct AddressBook init_book() {
 int main() {
     printf("This is your address book:\n");
 
-    struct AddressBook addressBook = init_book();
+    AddressBook addressBook = init_book();
 
     printf("address book pointer: %p\n", &addressBook);
-    
-    struct Contact contact = {"Robin", "0723079232"};
+
+    Contact contact = {"Robin", "0723079232"};
     addressBook = AddContact(addressBook, contact);
 
-    struct Contact contact2 = {"Shan", "0723079333"};
+    Contact contact2 = {"Shan", "0723079333"};
     addressBook = AddContact(addressBook, contact2);
 
-    struct Contact contact3 = {"Ahmed", "0723079888"};
+    Contact contact3 = {"Ahmed", "0723079888"};
     addressBook = AddContact(addressBook, contact3);
 
-    struct Contact contact4 = {"Billy", "0723079111"};
+    Contact contact4 = {"Billy", "0723079111"};
     addressBook = AddContact(addressBook, contact4);
 
     printf("address book pointer: %p\n", &addressBook);
@@ -84,4 +114,3 @@ int main() {
 
     return 0;
 }
-
