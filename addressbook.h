@@ -17,7 +17,8 @@ typedef struct {
 
 AddressBook* AddressBook_init();
 
-AddressBook AddContact(AddressBook* self, Contact contact);
+//AddressBook AddContact(AddressBook* self, Contact contact);
+AddressBook AddContact(AddressBook* self, char *name, char *number);
 
 void AddressBook_print(AddressBook* self);
 
