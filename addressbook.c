@@ -31,13 +31,13 @@ void AddContact(AddressBook* self, char *name, char *number){
     self->contacts[self->size - 1] = contact;
 }
 
-void AddressBook_print(AddressBook* self){
+void AddressBook_print(const AddressBook* self){
     for (int i = 0; i < self->size; ++i) {
         printf("name %s, number %s, ptr: %p\n", self->contacts[i].name, self->contacts[i].number, (void*)&self->contacts[i]);
     }
 }
 
-void AddressBook_deinit(AddressBook* self){
+void AddressBook_deinit(const AddressBook* self){
     free(self->contacts);
     free(self);
 }

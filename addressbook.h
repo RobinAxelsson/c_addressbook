@@ -11,8 +11,8 @@ AddressBook* AddressBook_init();
 
 void AddContact(AddressBook* self, char *name, char *number);
 
-void AddressBook_print(AddressBook* self);
+void AddressBook_print(const AddressBook* self);
 
-void AddressBook_deinit(AddressBook* self);
+void AddressBook_deinit(const AddressBook* self);
 
 #endif //C_ADDRESSBOOK_ADDRESSBOOK_H
